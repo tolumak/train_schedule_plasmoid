@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name="Train Schedule"
-Comment="SNCF train schedule plasmoid"
+Name=Train Schedule
+Comment=SNCF train schedule plasmoid
 Type=Service
 ServiceTypes=Plasma/Applet
 
