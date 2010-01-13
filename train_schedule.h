@@ -1,35 +1,27 @@
-// Here we avoid loading the header multiple times
-#ifndef Tutorial1_HEADER
-#define Tutorial1_HEADER
-// We need the Plasma Applet headers
+#ifndef TrainSchedule_HEADER
+#define TrainSchedule_HEADER
+
 #include <KIcon>
 
-#include <Plasma/Applet>
+#include <Plasma/PopupApplet>
 #include <Plasma/Svg>
 
-class QSizeF;
 
-// Define our plasma Applet
-class PlasmaTutorial1 : public Plasma::Applet
+class PlasmaTrainSchedule : public Plasma::PopupApplet
 {
-    Q_OBJECT
-    public:
+
+	Q_OBJECT
+public:
         // Basic Create/Destroy
-        PlasmaTutorial1(QObject *parent, const QVariantList &args);
-        ~PlasmaTutorial1();
+        PlasmaTrainSchedule(QObject *parent, const QVariantList &args);
+        ~PlasmaTrainSchedule();
 
-        // The paintInterface procedure paints the applet to screen
-        void paintInterface(QPainter *painter,
-                const QStyleOptionGraphicsItem *option,
-                const QRect& contentsRect);
-	void init();
+	QGraphicsWidget * graphicsWidget();
 
-    private:
-        Plasma::Svg m_svg;
-        KIcon m_icon;
+private:
+	QGraphicsWidget * m_graphicswidget;
 };
 
-// This is the command that links your applet to the .desktop file
-K_EXPORT_PLASMA_APPLET(train_schedule, PlasmaTutorial1)
+K_EXPORT_PLASMA_APPLET(train_schedule, PlasmaTrainSchedule)
 
 #endif
