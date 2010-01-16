@@ -7,10 +7,12 @@
 #include <Plasma/Svg>
 #include <Plasma/Label>
 
+#include "schedule.h"
+
 namespace Plasma {
   class Label;
 }
-class QGraphicsLinearLayout;
+class QGraphicsGridLayout;
 
 
 class PlasmaTrainSchedule : public Plasma::PopupApplet
@@ -26,8 +28,9 @@ public:
 
 private:
 	QGraphicsWidget * m_graphicsWidget;
-	Plasma::Label * m_label;
-	QGraphicsLinearLayout * m_layout;
+	QGraphicsGridLayout * m_layout;
+
+	QList<Schedule> m_schedule;
 };
 
 K_EXPORT_PLASMA_APPLET(train_schedule, PlasmaTrainSchedule)
