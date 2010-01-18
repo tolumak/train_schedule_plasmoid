@@ -12,16 +12,17 @@ Schedule::Schedule(QString & destination,
 {
 }
 
-QString Schedule::toStr()
+QString Schedule::start()
 {
-	QString str = "";
-	str += m_start.toString("hh:mm");
-	str += " ";
-	str += m_destination;
-	return str;
+	return m_start.toString("hh:mm");
 }
 
-QString Schedule::commaStations()
+QString Schedule::destination()
+{
+	return m_destination;
+}
+
+QString Schedule::stations()
 {
 	int i;
 	QString str = "";

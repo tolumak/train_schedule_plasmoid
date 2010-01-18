@@ -3,42 +3,30 @@
 #include <QPainter>
 #include <QFontMetrics>
 #include <QSizeF>
-#include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 
 #include <plasma/svg.h>
 #include <plasma/theme.h>
 
+#include "schedule_item.h"
+
 
 PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &args)
 	: Plasma::PopupApplet(parent, args),
-	  m_graphicsWidget(0),
-	  m_layout(0),
-	  m_scene(0),
-	  m_view(0)
+	  m_widget(0),
+	  m_layout(0)
 {
+	m_widget = new QGraphicsWidget(this);
+	m_layout = new QGraphicsLinearLayout(Qt::Vertical);
 
-
-	m_scene = new QGraphicsScene();
-	m_view = new QGraphicsView();
-
-	if (!m_scene || !m_view) {
+	if (!m_layout || !m_widget) {
 		setFailedToLaunch(true, "unable to initialize");
-		if (m_scene)
-			delete(m_scene);
-		if (m_view)
-			delete(m_view);
+		if (m_widget)
+			delete(m_widget);
+		if (m_layout)
+			delete(m_layout);
 		return;
 	}
-
-	m_view->setScene(m_scene);
-
-
-
-
-
-
-
-
 
 
 
@@ -60,10 +48,26 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 
 	m_schedule << Schedule(destination, stations, start, comment);
 
+	ScheduleItem * item;
+	item = new ScheduleItem();
+	item->setSchedule(m_schedule[0]);
+	m_layout->addItem(item);
+
+	item = new ScheduleItem();
+	item->setSchedule(m_schedule[0]);
+	m_layout->addItem(item);
+
+	item = new ScheduleItem();
+	item->setSchedule(m_schedule[0]);
+	m_layout->addItem(item);
+
+	m_widget->setLayout(m_layout);
+
+#if 0
 	destination = "Villefranche";
 	QTime start2 = start.addSecs(3600);
 	m_schedule << Schedule(destination, stations, start2, comment);
-
+#endif
 }
 
 
@@ -73,11 +77,7 @@ PlasmaTrainSchedule::~PlasmaTrainSchedule()
 
 QGraphicsWidget * PlasmaTrainSchedule::graphicsWidget()
 {
-	if (m_graphicsWidget) {
-		return m_graphicsWidget;
-	}
-
-	return m_graphicsWidget;
+	return m_widget;
 }
 
 

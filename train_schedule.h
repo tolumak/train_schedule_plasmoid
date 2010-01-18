@@ -7,10 +7,11 @@
 #include <Plasma/Svg>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 
 
 #include "schedule.h"
+#include "worker.h"
 
 class PlasmaTrainSchedule : public Plasma::PopupApplet
 {
@@ -24,14 +25,12 @@ public:
 	QGraphicsWidget * graphicsWidget();
 
 private:
-	QGraphicsWidget * m_graphicsWidget;
-	QGraphicsGridLayout * m_layout;
-	QGraphicsScene * m_scene;
-	QGraphicsView * m_view;
-
+	QGraphicsWidget * m_widget;
+	QGraphicsLinearLayout * m_layout;
 
 	QList<Schedule> m_schedule;
 };
+
 
 K_EXPORT_PLASMA_APPLET(train_schedule, PlasmaTrainSchedule)
 

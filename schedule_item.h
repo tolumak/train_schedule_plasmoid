@@ -1,17 +1,27 @@
-#include <QGraphicsItem>
+#ifndef SCHEDULE_ITEM_H
+#define SCHEDULE_ITEM_H
 
+#include <QGraphicsWidget>
+#include <QPainter>
+#include <Plasma/Label>
+#include <QGraphicsGridLayout>
 
-ScheduleItem:QGraphicsItem
+#include "schedule.h"
+
+class ScheduleItem: public QGraphicsWidget
 {
-	Q_OBJECT
-
 public:
+	ScheduleItem();
+	~ScheduleItem();
 
-	const int SCHEDULE_ITEM_WIDTH =150;
-	const int SCHEDULE_ITEM_HEIGHT = 50;
+	void setSchedule(Schedule & sched);
 
-
-	QRectF boundingRect() const;
-	vid paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-		  QWidget *widget);
+private:
+	Plasma::Label * m_destination;
+	Plasma::Label * m_comment;
+	Plasma::Label * m_start;
+	Plasma::Label * m_stations;
+	QGraphicsGridLayout * m_layout;
 };
+
+#endif
