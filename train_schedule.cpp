@@ -11,8 +11,38 @@
 
 PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &args)
 	: Plasma::PopupApplet(parent, args),
-	  m_graphicsWidget(0)
+	  m_graphicsWidget(0),
+	  m_layout(0),
+	  m_scene(0),
+	  m_view(0)
 {
+
+
+	m_scene = new QGraphicsScene();
+	m_view = new QGraphicsView();
+
+	if (!m_scene || !m_view) {
+		setFailedToLaunch(true, "unable to initialize");
+		if (m_scene)
+			delete(m_scene);
+		if (m_view)
+			delete(m_view);
+		return;
+	}
+
+	m_view->setScene(m_scene);
+
+
+
+
+
+
+
+
+
+
+
+
 	QStringList stations;
 	QString destination = "Amberieu";
 	QString comment = "toto";
@@ -46,29 +76,6 @@ QGraphicsWidget * PlasmaTrainSchedule::graphicsWidget()
 	if (m_graphicsWidget) {
 		return m_graphicsWidget;
 	}
-
-	Plasma::Label * m_label;
-	QGraphicsLinearLayout * layout;
-
-	m_layout = new QGraphicsGridLayout();
-
-	for (int i = 0 ; i < m_schedule.length() ; i++) {
-
-
-		m_label = new Plasma::Label;
-		m_label->setText(m_schedule[i].toStr());
-		m_layout->addItem(m_label, i * 2, 0);
-		m_label = new Plasma::Label;
-		m_label->setText(m_schedule[i].comment());
-		m_layout->addItem(m_label, i * 2, 1);
-		m_label = new Plasma::Label;
-		m_label->setText(m_schedule[i].commaStations());
-		m_layout->addItem(m_label, i * 2 + 1, 0, 1, 2);
-	}
-
-	m_graphicsWidget = new QGraphicsWidget(this);
-	m_graphicsWidget->setLayout(m_layout);
-
 
 	return m_graphicsWidget;
 }

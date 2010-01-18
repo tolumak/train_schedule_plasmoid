@@ -13,7 +13,7 @@ include_directories(
    )
 
 # We add our source code here
-set(train_schedule_SRCS train_schedule.cpp schedule.cpp)
+set(train_schedule_SRCS train_schedule.cpp schedule.cpp schedule_item.cpp)
 
 # Now make sure all files get to the right place
 kde4_add_plugin(plasma_applet_train_schedule ${train_schedule_SRCS})

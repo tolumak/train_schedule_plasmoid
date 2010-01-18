@@ -5,15 +5,12 @@
 
 #include <Plasma/PopupApplet>
 #include <Plasma/Svg>
-#include <Plasma/Label>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsGridLayout>
+
 
 #include "schedule.h"
-
-namespace Plasma {
-  class Label;
-}
-class QGraphicsGridLayout;
-
 
 class PlasmaTrainSchedule : public Plasma::PopupApplet
 {
@@ -29,6 +26,9 @@ public:
 private:
 	QGraphicsWidget * m_graphicsWidget;
 	QGraphicsGridLayout * m_layout;
+	QGraphicsScene * m_scene;
+	QGraphicsView * m_view;
+
 
 	QList<Schedule> m_schedule;
 };
