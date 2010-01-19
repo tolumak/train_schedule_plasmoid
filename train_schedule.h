@@ -5,30 +5,38 @@
 
 #include <Plasma/PopupApplet>
 #include <Plasma/Svg>
+#include <Plasma/DataEngine>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsLinearLayout>
 
 
 #include "schedule.h"
-#include "worker.h"
 
 class PlasmaTrainSchedule : public Plasma::PopupApplet
 {
 
 	Q_OBJECT
 public:
-        // Basic Create/Destroy
         PlasmaTrainSchedule(QObject *parent, const QVariantList &args);
         ~PlasmaTrainSchedule();
 
 	QGraphicsWidget * graphicsWidget();
+
+public slots:
+        void dataUpdated(const QString &name, const Plasma::DataEngine::Data &data);
+
+private:
+	void connectEngine();
 
 private:
 	QGraphicsWidget * m_widget;
 	QGraphicsLinearLayout * m_layout;
 
 	QList<Schedule> m_schedule;
+
+	static const int DEFAULT_INTERVAL = 1000;
+	int m_interval;
 };
 
 

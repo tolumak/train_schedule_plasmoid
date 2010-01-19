@@ -1,10 +1,11 @@
 [Desktop Entry]
-Name=Train Schedule
-Comment=SNCF train schedule plasmoid
+Name=Train Schedule Engine
+Comment=Train Schedule plasmoid data engine
 Type=Service
-ServiceTypes=Plasma/Applet
 
-X-KDE-Library=plasma_applet_train_schedule
+X-KDE-ServiceTypes=Plasma/DataEngine
+X-KDE-Library=plasma_engine_train_schedule
+X-Plasma-EngineName=train_schedule
 X-KDE-PluginInfo-Author=Michel Lafon-Puyo
 X-KDE-PluginInfo-Email=michel.lafonpuyo@gmail.com
 X-KDE-PluginInfo-Name=train_schedule

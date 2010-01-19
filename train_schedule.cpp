@@ -1,5 +1,6 @@
 #include "train_schedule.h"
 
+#include <qdebug.h>
 #include <QPainter>
 #include <QFontMetrics>
 #include <QSizeF>
@@ -9,12 +10,12 @@
 #include <plasma/theme.h>
 
 #include "schedule_item.h"
-#include "worker.h"
 
 PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &args)
 	: Plasma::PopupApplet(parent, args),
 	  m_widget(0),
-	  m_layout(0)
+	  m_layout(0),
+	  m_interval(DEFAULT_INTERVAL)
 {
 	m_widget = new QGraphicsWidget(this);
 	m_layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -28,43 +29,11 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 		return;
 	}
 
-	QStringList stations;
-	QString destination = "Amberieu";
-	QString comment = "toto";
-	QTime start = QTime::currentTime();
+	m_widget->setLayout(m_layout);
 
 	setPopupIcon("application-rss+xml");
 
-	stations << "Miribel";
-	stations << "Beynost";
-	stations << "St Maurice de Beynost";
-	stations << "Montluel";
-	stations << "La Valbonne";
-	stations << "Meximieux-Perouge";
-	stations << "Amberieu";
-
-	m_schedule << Schedule(destination, stations, start, comment);
-
-	ScheduleItem * item;
-	item = new ScheduleItem();
-	item->setSchedule(m_schedule[0]);
-	m_layout->addItem(item);
-
-	item = new ScheduleItem();
-	item->setSchedule(m_schedule[0]);
-	m_layout->addItem(item);
-
-	item = new ScheduleItem();
-	item->setSchedule(m_schedule[0]);
-	m_layout->addItem(item);
-
-	m_widget->setLayout(m_layout);
-
-#if 0
-	destination = "Villefranche";
-	QTime start2 = start.addSecs(3600);
-	m_schedule << Schedule(destination, stations, start2, comment);
-#endif
+	connectEngine();
 }
 
 
@@ -72,13 +41,54 @@ PlasmaTrainSchedule::~PlasmaTrainSchedule()
 {
 }
 
+void PlasmaTrainSchedule::connectEngine()
+{
+	QString source = "schedule";
+
+        Plasma::DataEngine* engine = dataEngine("train_schedule");
+	if (!engine) {
+		qDebug() << "Unable to connect to train_schedule engine";
+		return;
+	}
+	engine->connectSource(source, this, m_interval);
+}
+
 QGraphicsWidget * PlasmaTrainSchedule::graphicsWidget()
 {
-	Worker w;
-	w.request();
 	return m_widget;
 }
 
+void PlasmaTrainSchedule::dataUpdated(const QString &name, const Plasma::DataEngine::Data &data)
+{
+       	if (name == "schedule") {
+
+		QVariantList items = data["items"].toList();
+
+		while (items.count() > m_layout->count()) {
+			ScheduleItem * schedItem = new ScheduleItem();
+			m_layout->addItem(schedItem);
+		}
+		while (items.count() < m_layout->count()) {
+			m_layout->removeAt(0);
+		}
+
+
+		for (int i = 0 ; i < items.count() ; i++) {
+			QMap<QString,QVariant> item = items[i].toMap();
+			qDebug() << item["comment"].toString().mid(1);
+			Schedule sched(item["type"].toString(),
+				       item["destination"].toString(),
+				       item["stations"].toStringList(),
+				       item["start"].toTime(),
+				       item["delay"].toString(),
+				       item["comment"].toString().mid(1));
+
+			ScheduleItem * schedItem = dynamic_cast<ScheduleItem *>(m_layout->itemAt(i));
+			schedItem->setSchedule(sched);
+		}
+	}
+
+}
 
 
 #include "train_schedule.moc"

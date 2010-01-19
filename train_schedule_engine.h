@@ -1,37 +1,35 @@
-#ifndef WORKER_H
-#define WORKER_H
+#ifndef TRAIN_SCHEDULE_ENGINE_H
+#define TRAIN_SCHEDULE_ENGINE_H
 
-#include <QThread>
+#include <Plasma/DataEngine>
+
 #include <QList>
-#include <QMutex>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QUrl>
 
-#include "schedule.h"
 
-class Worker : public QObject
+class TrainScheduleEngine : public Plasma::DataEngine
 {
 	Q_OBJECT
 
 
 public:
-	const static int DEFAULT_NB = 4;
-	const static int DEFAULT_INTERVAL = 5;
+	const static int DEFAULT_NB = 6;
+	const static int DEFAULT_INTERVAL = 60*1000;
 	const static QString  DEFAULT_STATION;
 
 public:
-	Worker();
-	~Worker();
-	Schedule getNextSchedule();
+	TrainScheduleEngine(QObject* parent, const QVariantList& args);
+	~TrainScheduleEngine();
 	void setNb(int nb);
 	void setInterval(int interval);
 	void setStation(QString stationId);
 	void setStart(QTime start);
 
-	void request();
 protected:
-	void run();
+	bool sourceRequestEvent(const QString& name);
+	bool updateSourceEvent(const QString& name);
 
 public slots:
 	void requestFinished(QNetworkReply * reply);
@@ -39,12 +37,12 @@ public slots:
 
 private:
 	QUrl getUrl();
+	void request();
+	QVariant parseLine(QString &line);
 
 private:
 	const static QString urlFormat;
 
-	QList<Schedule> m_scheduleList;
-	QMutex m_mutex;
 	QNetworkAccessManager * m_manager;
 
 	QTime m_start;

@@ -21,6 +21,7 @@ private:
 	Plasma::Label * m_comment;
 	Plasma::Label * m_start;
 	Plasma::Label * m_stations;
+	Plasma::Label * m_delay;
 	QGraphicsGridLayout * m_layout;
 };
 
