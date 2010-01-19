@@ -69,23 +69,26 @@ void PlasmaTrainSchedule::dataUpdated(const QString &name, const Plasma::DataEng
 			m_layout->addItem(schedItem);
 		}
 		while (items.count() < m_layout->count()) {
+			QGraphicsLayoutItem * layoutItem = m_layout->itemAt(0);
 			m_layout->removeAt(0);
+			delete(layoutItem);
+
 		}
 
 
 		for (int i = 0 ; i < items.count() ; i++) {
 			QMap<QString,QVariant> item = items[i].toMap();
-			qDebug() << item["comment"].toString().mid(1);
 			Schedule sched(item["type"].toString(),
 				       item["destination"].toString(),
 				       item["stations"].toStringList(),
 				       item["start"].toTime(),
 				       item["delay"].toString(),
-				       item["comment"].toString().mid(1));
+				       item["comment"].toString().mid(2));
 
 			ScheduleItem * schedItem = dynamic_cast<ScheduleItem *>(m_layout->itemAt(i));
 			schedItem->setSchedule(sched);
 		}
+		m_layout->activate();
 	}
 
 }

@@ -44,7 +44,6 @@ ScheduleItem::ScheduleItem()
 	m_layout->setColumnAlignment(1, Qt::AlignLeft);
 	m_layout->setColumnFixedWidth(0, 75);
 	m_layout->setRowFixedHeight(0, defaultFont.pixelSize());
-	m_layout->setRowFixedHeight(2, defaultFont.pixelSize());
 
 	m_comment->widget()->setStyleSheet("QLabel { color : red; }");
 	m_delay->widget()->setStyleSheet("QLabel { color : red; }");
@@ -56,7 +55,6 @@ ScheduleItem::ScheduleItem()
 
 	setPreferredWidth(400);
 	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed, QSizePolicy::GroupBox);
-
 	setLayout(m_layout);
 }
 
@@ -72,26 +70,22 @@ void ScheduleItem::setSchedule(Schedule & sched)
 			       arg(sched.type()));
 	m_start->setText(sched.startStr());
 	m_stations->setText(sched.stationsStr());
-
-	if (sched.comment().isEmpty()) {
-		m_comment->hide();
-	} else {
-		m_comment->setText(sched.comment());
-		m_comment->show();
-	}
-
-	if (sched.delay().isEmpty()) {
-		m_delay->hide();
-	} else {
-		m_delay->setText(sched.delay());
-		m_delay->show();
-	}
-
+	m_stations->adjustSize();
 	m_layout->setRowFixedHeight(1, m_stations->size().height());
-	if (m_delay->isVisible() || m_comment->isVisible()) {
-		m_layout->setRowFixedHeight(2, defaultFont.pixelSize());
+	m_comment->setText(sched.comment());
+	m_delay->setText(sched.delay());
+
+	if (m_layout->itemAt(4))
+		m_layout->removeAt(4);
+	if (m_layout->itemAt(3))
+		m_layout->removeAt(3);
+
+	if (!sched.delay().isEmpty()) {
+		m_layout->addItem(m_delay, 2, 0);
 	}
-	else {
-		m_layout->setRowFixedHeight(2, 0);
+
+	if (!sched.comment().isEmpty()) {
+		m_layout->addItem(m_comment, 2, 1);
 	}
+
 }
