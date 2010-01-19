@@ -9,7 +9,7 @@
 #include <plasma/theme.h>
 
 #include "schedule_item.h"
-
+#include "worker.h"
 
 PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &args)
 	: Plasma::PopupApplet(parent, args),
@@ -28,7 +28,7 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 		return;
 	}
 
-
+	Worker w;
 
 
 	QStringList stations;
