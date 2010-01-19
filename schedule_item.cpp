@@ -3,8 +3,11 @@
 #include <QWidget>
 #include <Plasma/Theme>
 
+
 ScheduleItem::ScheduleItem()
 {
+	QFont defaultFont = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DefaultFont);
+
 	m_destination = new Plasma::Label();
 	m_comment = new Plasma::Label();
 	m_start = new Plasma::Label();
@@ -40,12 +43,14 @@ ScheduleItem::ScheduleItem()
 	m_layout->setColumnAlignment(0, Qt::AlignLeft);
 	m_layout->setColumnAlignment(1, Qt::AlignLeft);
 	m_layout->setColumnFixedWidth(0, 75);
+	m_layout->setRowFixedHeight(0, defaultFont.pixelSize());
+	m_layout->setRowFixedHeight(2, defaultFont.pixelSize());
 
 	m_comment->widget()->setStyleSheet("QLabel { color : red; }");
 	m_delay->widget()->setStyleSheet("QLabel { color : red; }");
 
 
-	QFont littleFont = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DefaultFont);
+	QFont littleFont = defaultFont;
 	littleFont.setPointSize(littleFont.pointSize() - 2);
 	m_stations->widget()->setFont(littleFont);
 
@@ -61,7 +66,10 @@ ScheduleItem::~ScheduleItem()
 
 void ScheduleItem::setSchedule(Schedule & sched)
 {
-	m_destination->setText(sched.destination());
+	QFont defaultFont = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DefaultFont);
+	m_destination->setText(QString("%1 (%2)").
+			       arg(sched.destination()).
+			       arg(sched.type()));
 	m_start->setText(sched.startStr());
 	m_stations->setText(sched.stationsStr());
 
@@ -79,5 +87,11 @@ void ScheduleItem::setSchedule(Schedule & sched)
 		m_delay->show();
 	}
 
-
+	m_layout->setRowFixedHeight(1, m_stations->size().height());
+	if (m_delay->isVisible() || m_comment->isVisible()) {
+		m_layout->setRowFixedHeight(2, defaultFont.pixelSize());
+	}
+	else {
+		m_layout->setRowFixedHeight(2, 0);
+	}
 }
