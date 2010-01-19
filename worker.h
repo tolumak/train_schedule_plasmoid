@@ -10,10 +10,15 @@
 
 #include "schedule.h"
 
-class Worker: public QThread
+class Worker : public QObject
 {
 	Q_OBJECT
 
+
+public:
+	const static int DEFAULT_NB = 4;
+	const static int DEFAULT_INTERVAL = 5;
+	const static QString  DEFAULT_STATION;
 
 public:
 	Worker();
@@ -24,22 +29,23 @@ public:
 	void setStation(QString stationId);
 	void setStart(QTime start);
 
+	void request();
 protected:
 	void run();
 
-private:
-	int request();
-	QUrl getUrl();
+public slots:
 	void requestFinished(QNetworkReply * reply);
+	void slotError(QNetworkReply::NetworkError error);
 
+private:
+	QUrl getUrl();
 
 private:
 	const static QString urlFormat;
-	const static QString host;
 
 	QList<Schedule> m_scheduleList;
 	QMutex m_mutex;
-	QNetworkAccessManager m_manager;
+	QNetworkAccessManager * m_manager;
 
 	QTime m_start;
 	QString m_station;

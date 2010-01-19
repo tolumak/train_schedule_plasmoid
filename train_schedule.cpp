@@ -28,9 +28,6 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 		return;
 	}
 
-	Worker w;
-
-
 	QStringList stations;
 	QString destination = "Amberieu";
 	QString comment = "toto";
@@ -77,6 +74,8 @@ PlasmaTrainSchedule::~PlasmaTrainSchedule()
 
 QGraphicsWidget * PlasmaTrainSchedule::graphicsWidget()
 {
+	Worker w;
+	w.request();
 	return m_widget;
 }
 
