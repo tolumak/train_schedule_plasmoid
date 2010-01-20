@@ -2,7 +2,7 @@
 Name=Train Schedule
 Comment=SNCF train schedule plasmoid
 Type=Service
-Icon=application-rss+xml
+Icon=train_schedule
 ServiceTypes=Plasma/Applet
 
 X-KDE-Library=plasma_applet_train_schedule

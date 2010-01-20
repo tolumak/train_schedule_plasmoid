@@ -36,3 +36,6 @@ install(FILES train_schedule_plasmoid.desktop
 
 install(FILES train_schedule_engine.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
+
+kde4_install_icons(${ICON_INSTALL_DIR})
+
