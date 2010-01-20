@@ -8,14 +8,21 @@
 
 #include <plasma/svg.h>
 #include <plasma/theme.h>
+#include <KConfigDialog>
 
 #include "schedule_item.h"
+#include "station.h"
+
+const QString PlasmaTrainSchedule::DEFAULT_STATION = Station::stationId("Lyon Part-Dieu");
+const int PlasmaTrainSchedule::DEFAULT_INTERVAL = 60*1000;
+const int PlasmaTrainSchedule::DEFAULT_NB = 6;
+const int PlasmaTrainSchedule::DEFAULT_START = 30 * 60 * 1000;
+
 
 PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &args)
 	: Plasma::PopupApplet(parent, args),
 	  m_widget(0),
-	  m_layout(0),
-	  m_interval(DEFAULT_INTERVAL)
+	  m_layout(0)
 {
 	m_widget = new QGraphicsWidget(this);
 	m_layout = new QGraphicsLinearLayout(Qt::Vertical);
@@ -31,9 +38,16 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 
 	m_widget->setLayout(m_layout);
 
-	setPopupIcon("application-rss+xml");
+	setHasConfigurationInterface(true);
+	setPopupIcon(icon());
 
-	connectEngine();
+	KConfigGroup cg = config();
+	m_interval = cg.readEntry("interval", DEFAULT_INTERVAL);
+	m_start = cg.readEntry("start", DEFAULT_START);
+	m_nb = cg.readEntry("nb", DEFAULT_NB);
+	m_station = cg.readEntry("station", DEFAULT_STATION);
+
+	connectToEngine();
 }
 
 
@@ -41,15 +55,19 @@ PlasmaTrainSchedule::~PlasmaTrainSchedule()
 {
 }
 
-void PlasmaTrainSchedule::connectEngine()
+void PlasmaTrainSchedule::connectToEngine()
 {
-	QString source = "schedule";
+	QString source = QString("schedule-%1-%2-%3").arg(m_station).arg(m_nb).arg(m_start);
 
         Plasma::DataEngine* engine = dataEngine("train_schedule");
 	if (!engine) {
 		qDebug() << "Unable to connect to train_schedule engine";
 		return;
 	}
+	foreach(QString s, engine->sources()) {
+		engine->disconnectSource(s, this);
+	}
+
 	engine->connectSource(source, this, m_interval);
 }
 
@@ -58,9 +76,44 @@ QGraphicsWidget * PlasmaTrainSchedule::graphicsWidget()
 	return m_widget;
 }
 
+void PlasmaTrainSchedule::createConfigurationInterface(KConfigDialog *parent)
+{
+	QWidget *widget = new QWidget();
+	parent->addPage(widget, i18n("General"), icon());
+	ui.setupUi(widget);
+
+	ui.m_startSpinBox->setValue(m_start/60/1000);
+	ui.m_nbSpinBox->setValue(m_nb);
+	ui.m_intervalSpinBox->setValue(m_interval/60/1000);
+	foreach (QString key, Station::map().keys()) {
+		ui.m_stationComboBox->addItem(key, Station::map()[key]);
+	}
+	ui.m_stationComboBox->setCurrentIndex(ui.m_stationComboBox->findData(m_station));
+
+	connect(parent, SIGNAL(accepted()), this, SLOT(configurationAccepted()));
+}
+
+void PlasmaTrainSchedule::configurationAccepted()
+{
+	m_start = ui.m_startSpinBox->value() * 60 * 1000;
+	m_nb = ui.m_nbSpinBox->value();
+	m_interval = ui.m_intervalSpinBox->value() * 60 * 1000;
+	m_station = ui.m_stationComboBox->itemData(ui.m_stationComboBox->currentIndex()).toString();
+
+	KConfigGroup cg = config();
+	cg.writeEntry("interval", m_interval);
+	cg.writeEntry("start", m_start);
+	cg.writeEntry("nb", m_nb);
+	cg.writeEntry("station", m_station);
+
+	emit configNeedsSaving();
+
+	connectToEngine();
+}
+
 void PlasmaTrainSchedule::dataUpdated(const QString &name, const Plasma::DataEngine::Data &data)
 {
-       	if (name == "schedule") {
+       	if (name == QString("schedule-%1-%2-%3").arg(m_station).arg(m_nb).arg(m_start)) {
 
 		QVariantList items = data["items"].toList();
 

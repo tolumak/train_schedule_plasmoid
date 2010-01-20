@@ -9,6 +9,7 @@ class Station
 public:
 	static QString stationId(QString name);
 	static QString stationName(QString id);
+	static const QMap<QString, QString> & map();
 
 private:
 	static QMap<QString, QString> stationIdMap;

@@ -1,3 +1,4 @@
+
 #include "station.h"
 
 QMap<QString,QString> Station::stationIdMap;
@@ -25,6 +26,15 @@ void Station::populate() {
 	stationIdMap["Lyon Part-Dieu"] = QString("OCE87723197");
 	stationIdMap["Lyon Perrache"] = "OCE87722025";
 	stationIdMap["Macon"] = "OCE87725689";
-	stationIdMap["Ambérieu"] = "OCE87743716";
+	stationIdMap["Amberieu"] = "OCE87743716";
 	stationIdMap["Villefranche"] = "OCE87721332";
+}
+
+const QMap<QString, QString> & Station::map() {
+	if (!initialized) {
+		populate();
+		initialized = true;
+	}
+
+	return stationIdMap;
 }

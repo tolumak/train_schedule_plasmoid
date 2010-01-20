@@ -14,7 +14,7 @@ const QString TrainScheduleEngine::urlFormat = "http://aln.canaltp.fr/dev/index.
 
 TrainScheduleEngine::TrainScheduleEngine(QObject* parent, const QVariantList& args)
 	: Plasma::DataEngine(parent, args),
-	m_start(QTime::currentTime()),
+	m_start(DEFAULT_START),
 	m_station(DEFAULT_STATION),
 	m_nb(DEFAULT_NB),
 	m_interval(DEFAULT_INTERVAL)
@@ -45,7 +45,14 @@ bool TrainScheduleEngine::sourceRequestEvent(const QString& name)
 
 bool TrainScheduleEngine::updateSourceEvent(const QString& name)
 {
-	Q_UNUSED(name);
+	QStringList list = name.split("-");
+	QString newStation = list[1];
+	int newNb = list[2].toInt();
+	int newStart = list[3].toInt();
+
+	setNb(newNb);
+	setStart(newStart);
+	setStation(newStation);
 
 	request();
 
@@ -55,7 +62,8 @@ bool TrainScheduleEngine::updateSourceEvent(const QString& name)
 
 void TrainScheduleEngine::setNb(int nb)
 {
-	m_nb = nb;
+	if (nb > 0 && nb <= MAX_NB)
+		m_nb = nb;
 }
 
 void TrainScheduleEngine::setInterval(int interval)
@@ -68,7 +76,7 @@ void TrainScheduleEngine::setStation(QString stationId)
 	m_station = stationId;
 }
 
-void TrainScheduleEngine::setStart(QTime start)
+void TrainScheduleEngine::setStart(int start)
 {
 	m_start = start;
 }
@@ -76,9 +84,11 @@ void TrainScheduleEngine::setStart(QTime start)
 
 QUrl TrainScheduleEngine::getUrl()
 {
+	QTime time = QTime::currentTime().addMSecs(m_start);
+
 	return QUrl(urlFormat.arg(m_station).arg(m_nb)
 		.arg(QDate::currentDate().toString("yyyy;MM;dd"))
-		    .arg(QTime::currentTime().toString("HH;mm")));
+		    .arg(time.toString("HH;mm")));
 }
 
 
@@ -88,14 +98,14 @@ void TrainScheduleEngine::request()
 
 	reply = m_manager->get(QNetworkRequest(getUrl()));
 
-
 	connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
 		this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void TrainScheduleEngine::requestFinished(QNetworkReply * reply)
 {
-	QString source = "schedule";
+	QString source = QString("schedule-%1-%2-%3").arg(m_station).arg(m_nb).arg(m_start);
+
 	QString rep = QString::fromUtf8(reply->readAll());
 	QStringList strings = rep.split(QRegExp("&ligne[0-9]="));
 	if (!strings.isEmpty())

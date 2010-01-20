@@ -16,7 +16,9 @@ class TrainScheduleEngine : public Plasma::DataEngine
 
 public:
 	const static int DEFAULT_NB = 6;
+	const static int MAX_NB = 15;
 	const static int DEFAULT_INTERVAL = 60*1000;
+	const static int DEFAULT_START = 0;
 	const static QString  DEFAULT_STATION;
 
 public:
@@ -25,7 +27,7 @@ public:
 	void setNb(int nb);
 	void setInterval(int interval);
 	void setStation(QString stationId);
-	void setStart(QTime start);
+	void setStart(int start);
 
 protected:
 	bool sourceRequestEvent(const QString& name);
@@ -45,7 +47,7 @@ private:
 
 	QNetworkAccessManager * m_manager;
 
-	QTime m_start;
+	int m_start;
 	QString m_station;
 	int m_nb;
 	int m_interval;

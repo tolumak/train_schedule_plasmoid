@@ -12,11 +12,11 @@ include_directories(
    ${KDE4_INCLUDES}
    )
 
-# We add our source code here
 set(train_schedule_plasmoid_SRCS train_schedule.cpp schedule.cpp schedule_item.cpp station.cpp)
 set(train_schedule_engine_SRCS train_schedule_engine.cpp station.cpp schedule.cpp)
 
-# Now make sure all files get to the right place
+kde4_add_ui_files(train_schedule_plasmoid_SRCS config.ui)
+
 kde4_add_plugin(plasma_applet_train_schedule ${train_schedule_plasmoid_SRCS})
 kde4_add_plugin(plasma_engine_train_schedule ${train_schedule_engine_SRCS})
 target_link_libraries(plasma_applet_train_schedule

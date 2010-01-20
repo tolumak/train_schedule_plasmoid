@@ -75,16 +75,14 @@ void ScheduleItem::setSchedule(Schedule & sched)
 	m_comment->setText(sched.comment());
 	m_delay->setText(sched.delay());
 
-	if (m_layout->itemAt(4))
-		m_layout->removeAt(4);
-	if (m_layout->itemAt(3))
+	while (m_layout->count() > 3)
 		m_layout->removeAt(3);
 
 	if (!sched.delay().isEmpty()) {
 		m_layout->addItem(m_delay, 2, 0);
 	}
 
-	if (!sched.comment().isEmpty()) {
+	if  (!sched.comment().isEmpty()) {
 		m_layout->addItem(m_comment, 2, 1);
 	}
 

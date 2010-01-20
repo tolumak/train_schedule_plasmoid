@@ -6,12 +6,9 @@
 #include <Plasma/PopupApplet>
 #include <Plasma/Svg>
 #include <Plasma/DataEngine>
-#include <QGraphicsScene>
-#include <QGraphicsView>
 #include <QGraphicsLinearLayout>
 
-
-#include "schedule.h"
+#include "ui_config.h"
 
 class PlasmaTrainSchedule : public Plasma::PopupApplet
 {
@@ -25,18 +22,25 @@ public:
 
 public slots:
         void dataUpdated(const QString &name, const Plasma::DataEngine::Data &data);
+        void createConfigurationInterface(KConfigDialog *parent);
+	void configurationAccepted();
 
 private:
-	void connectEngine();
+	void connectToEngine();
 
 private:
 	QGraphicsWidget * m_widget;
 	QGraphicsLinearLayout * m_layout;
 
-	QList<Schedule> m_schedule;
-
-	static const int DEFAULT_INTERVAL = 1000;
+	static const int DEFAULT_INTERVAL;
 	int m_interval;
+	static const int DEFAULT_NB;
+	int m_nb;
+	static const int DEFAULT_START;
+	int m_start;
+	static const QString DEFAULT_STATION;
+	QString m_station;
+	Ui::Config ui;
 };
 
 
