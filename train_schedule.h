@@ -41,6 +41,7 @@ public:
 
 	QGraphicsWidget * graphicsWidget();
 
+
 public slots:
         void dataUpdated(const QString &name, const Plasma::DataEngine::Data &data);
         void createConfigurationInterface(KConfigDialog *parent);

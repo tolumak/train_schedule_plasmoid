@@ -60,6 +60,7 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 
 	m_widget->setLayout(m_layout);
 
+	setAspectRatioMode(Plasma::FixedSize);
 	setHasConfigurationInterface(true);
 	setPopupIcon(icon());
 
@@ -138,12 +139,13 @@ void PlasmaTrainSchedule::dataUpdated(const QString &name, const Plasma::DataEng
        	if (name == QString("schedule-%1-%2-%3").arg(m_station).arg(m_nb).arg(m_start)) {
 
 		QVariantList items = data["items"].toList();
-
 		while (items.count() > m_layout->count()) {
 			ScheduleItem * schedItem = new ScheduleItem();
 			m_layout->addItem(schedItem);
 		}
-		while (items.count() < m_layout->count()) {
+
+
+		while (m_layout->count() > items.count()) {
 			QGraphicsLayoutItem * layoutItem = m_layout->itemAt(0);
 			m_layout->removeAt(0);
 			delete(layoutItem);
@@ -163,9 +165,14 @@ void PlasmaTrainSchedule::dataUpdated(const QString &name, const Plasma::DataEng
 			ScheduleItem * schedItem = dynamic_cast<ScheduleItem *>(m_layout->itemAt(i));
 			schedItem->setSchedule(sched);
 		}
-		m_layout->activate();
-	}
 
+		/* How to do this differently? */
+		if (items.count() > 0 && layout()) {
+			layout()->invalidate();
+			layout()->activate();
+			resize(maximumSize());
+		}
+	}
 }
 
 
