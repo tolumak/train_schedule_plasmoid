@@ -75,7 +75,8 @@ ScheduleItem::ScheduleItem()
 	m_stations->widget()->setFont(littleFont);
 
 	setPreferredWidth(400);
-	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed, QSizePolicy::GroupBox);
+
+	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	setLayout(m_layout);
 }
 
@@ -106,5 +107,4 @@ void ScheduleItem::setSchedule(Schedule & sched)
 	if  (!sched.comment().isEmpty()) {
 		m_layout->addItem(m_comment, 2, 1);
 	}
-
 }
