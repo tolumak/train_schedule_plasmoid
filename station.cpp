@@ -49,6 +49,7 @@ void Station::populate() {
 	stationIdMap["Macon"] = "OCE87725689";
 	stationIdMap["Amberieu"] = "OCE87743716";
 	stationIdMap["Villefranche"] = "OCE87721332";
+	stationIdMap["St Etienne"] = "OCE87726000";
 }
 
 const QMap<QString, QString> & Station::map() {
