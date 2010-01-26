@@ -32,7 +32,7 @@
 class ScheduleItem: public QGraphicsWidget
 {
 public:
-	ScheduleItem();
+	ScheduleItem(QGraphicsItem * parent = 0, Qt::WindowFlags wFlags = 0);
 	~ScheduleItem();
 
 	void setSchedule(Schedule & sched);

@@ -22,19 +22,21 @@
 #include "schedule_item.h"
 
 #include <QWidget>
+#include <QLabel>
 #include <Plasma/Theme>
 
 
-ScheduleItem::ScheduleItem()
+ScheduleItem::ScheduleItem(QGraphicsItem * parent, Qt::WindowFlags wFlags):
+	QGraphicsWidget(parent, wFlags)
 {
 	QFont defaultFont = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DefaultFont);
 
-	m_destination = new Plasma::Label();
-	m_comment = new Plasma::Label();
-	m_start = new Plasma::Label();
-	m_stations = new Plasma::Label();
-	m_delay = new Plasma::Label();
-	m_layout = new QGraphicsGridLayout();
+	m_destination = new Plasma::Label(this);
+	m_comment = new Plasma::Label(this);
+	m_start = new Plasma::Label(this);
+	m_stations = new Plasma::Label(this);
+	m_delay = new Plasma::Label(this);
+	m_layout = new QGraphicsGridLayout(this);
 
 	if (!m_destination ||
 	    !m_comment ||
@@ -54,20 +56,22 @@ ScheduleItem::ScheduleItem()
 		return;
 	}
 
+	m_destination->nativeWidget()->setWordWrap(false);
+	m_comment->nativeWidget()->setWordWrap(false);
+	m_start->nativeWidget()->setWordWrap(false);
+	m_delay->nativeWidget()->setWordWrap(false);
+
 	m_layout->addItem(m_start, 0, 0);
 	m_layout->addItem(m_destination, 0, 1);
 	m_layout->addItem(m_stations, 1, 0, 1, 2);
 	m_layout->addItem(m_delay, 2, 0);
 	m_layout->addItem(m_comment, 2, 1);
 
-	m_destination->setAlignment(Qt::AlignLeft);
-	m_layout->setColumnAlignment(0, Qt::AlignLeft);
-	m_layout->setColumnAlignment(1, Qt::AlignLeft);
-	m_layout->setColumnFixedWidth(0, 75);
-	m_layout->setRowFixedHeight(0, defaultFont.pixelSize());
+	m_layout->setColumnFixedWidth(0, 45);
 
-	m_comment->widget()->setStyleSheet("QLabel { color : red; }");
-	m_delay->widget()->setStyleSheet("QLabel { color : red; }");
+	m_comment->setStyleSheet("QLabel { color : red; }");
+	m_delay->setStyleSheet("QLabel { color : red; }");
+//	m_destination->setStyleSheet("QLabel { border : 1px solid white; }");
 
 
 	QFont littleFont = defaultFont;
@@ -90,10 +94,9 @@ void ScheduleItem::setSchedule(Schedule & sched)
 	m_destination->setText(QString("%1 (%2)").
 			       arg(sched.destination()).
 			       arg(sched.type()));
+
 	m_start->setText(sched.startStr());
 	m_stations->setText(sched.stationsStr());
-	m_stations->adjustSize();
-	m_layout->setRowFixedHeight(1, m_stations->size().height());
 	m_comment->setText(sched.comment());
 	m_delay->setText(sched.delay());
 

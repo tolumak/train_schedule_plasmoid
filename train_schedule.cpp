@@ -171,10 +171,10 @@ void PlasmaTrainSchedule::dataUpdated(const QString &name, const Plasma::DataEng
 		}
 
 		/* How to do this differently? */
-		if (items.count() > 0 && layout()) {
+		if (items.count() > 0 && layout() && layout()->itemAt(0) == m_widget) {
 			layout()->invalidate();
 			layout()->activate();
-			resize(maximumSize());
+			adjustSize();
 		}
 	}
 }
