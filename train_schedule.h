@@ -38,9 +38,8 @@ class PlasmaTrainSchedule : public Plasma::PopupApplet
 public:
         PlasmaTrainSchedule(QObject *parent, const QVariantList &args);
         ~PlasmaTrainSchedule();
-
+	void init();
 	QGraphicsWidget * graphicsWidget();
-
 
 public slots:
         void dataUpdated(const QString &name, const Plasma::DataEngine::Data &data);

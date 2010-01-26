@@ -64,6 +64,15 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 	setHasConfigurationInterface(true);
 	setPopupIcon(icon());
 
+}
+
+
+PlasmaTrainSchedule::~PlasmaTrainSchedule()
+{
+}
+
+void PlasmaTrainSchedule::init()
+{
 	KConfigGroup cg = config();
 	m_interval = cg.readEntry("interval", DEFAULT_INTERVAL);
 	m_start = cg.readEntry("start", DEFAULT_START);
@@ -71,11 +80,6 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 	m_station = cg.readEntry("station", DEFAULT_STATION);
 
 	connectToEngine();
-}
-
-
-PlasmaTrainSchedule::~PlasmaTrainSchedule()
-{
 }
 
 void PlasmaTrainSchedule::connectToEngine()
@@ -129,7 +133,7 @@ void PlasmaTrainSchedule::configurationAccepted()
 	cg.writeEntry("nb", m_nb);
 	cg.writeEntry("station", m_station);
 
-	emit configNeedsSaving();
+	cg.config()->sync();
 
 	connectToEngine();
 }
