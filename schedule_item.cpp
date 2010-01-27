@@ -90,6 +90,7 @@ ScheduleItem::~ScheduleItem()
 
 void ScheduleItem::setSchedule(Schedule & sched)
 {
+	int h;
 	QFont defaultFont = Plasma::Theme::defaultTheme()->font(Plasma::Theme::DefaultFont);
 	m_destination->setText(QString("%1 (%2)").
 			       arg(sched.destination()).
@@ -97,6 +98,10 @@ void ScheduleItem::setSchedule(Schedule & sched)
 
 	m_start->setText(sched.startStr());
 	m_stations->setText(sched.stationsStr());
+	h = m_stations->nativeWidget()->heightForWidth(size().width());
+	m_stations->setMinimumHeight(h);
+	m_stations->setPreferredHeight(h);
+
 	m_comment->setText(sched.comment());
 	m_delay->setText(sched.delay());
 
@@ -110,9 +115,15 @@ void ScheduleItem::setSchedule(Schedule & sched)
 	if  (!sched.comment().isEmpty()) {
 		m_layout->addItem(m_comment, 2, 1);
 	}
+
+	adjustSize();
 }
 
 void ScheduleItem::resizeEvent(QGraphicsSceneResizeEvent * event)
 {
-	m_stations->setMinimumHeight(m_stations->nativeWidget()->heightForWidth(event->newSize().width()));
+	int h;
+	h = m_stations->nativeWidget()->heightForWidth(event->newSize().width());
+	m_stations->setMinimumHeight(h);
+	m_stations->setPreferredHeight(h);
+
 }
