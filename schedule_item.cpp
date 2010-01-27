@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <Plasma/Theme>
+#include <QGraphicsSceneResizeEvent>
 
 
 ScheduleItem::ScheduleItem(QGraphicsItem * parent, Qt::WindowFlags wFlags):
@@ -67,11 +68,11 @@ ScheduleItem::ScheduleItem(QGraphicsItem * parent, Qt::WindowFlags wFlags):
 	m_layout->addItem(m_delay, 2, 0);
 	m_layout->addItem(m_comment, 2, 1);
 
-	m_layout->setColumnFixedWidth(0, 45);
+	m_layout->setColumnFixedWidth(0, 65);
 
 	m_comment->setStyleSheet("QLabel { color : red; }");
 	m_delay->setStyleSheet("QLabel { color : red; }");
-//	m_destination->setStyleSheet("QLabel { border : 1px solid white; }");
+//	m_stations->setStyleSheet("QLabel { border : 1px solid white; }");
 
 
 	QFont littleFont = defaultFont;
@@ -80,7 +81,6 @@ ScheduleItem::ScheduleItem(QGraphicsItem * parent, Qt::WindowFlags wFlags):
 
 	setPreferredWidth(400);
 
-	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	setLayout(m_layout);
 }
 
@@ -110,4 +110,9 @@ void ScheduleItem::setSchedule(Schedule & sched)
 	if  (!sched.comment().isEmpty()) {
 		m_layout->addItem(m_comment, 2, 1);
 	}
+}
+
+void ScheduleItem::resizeEvent(QGraphicsSceneResizeEvent * event)
+{
+	m_stations->setMinimumHeight(m_stations->nativeWidget()->heightForWidth(event->newSize().width()));
 }

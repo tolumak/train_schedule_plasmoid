@@ -60,7 +60,7 @@ PlasmaTrainSchedule::PlasmaTrainSchedule(QObject *parent, const QVariantList &ar
 
 	m_widget->setLayout(m_layout);
 
-	setAspectRatioMode(Plasma::FixedSize);
+	setAspectRatioMode(Plasma::IgnoreAspectRatio);
 	setHasConfigurationInterface(true);
 	setPopupIcon(icon());
 

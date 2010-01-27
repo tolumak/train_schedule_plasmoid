@@ -37,6 +37,9 @@ public:
 
 	void setSchedule(Schedule & sched);
 
+protected:
+	void resizeEvent(QGraphicsSceneResizeEvent * event);
+
 private:
 	Plasma::Label * m_destination;
 	Plasma::Label * m_comment;
