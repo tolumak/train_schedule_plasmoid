@@ -24,7 +24,6 @@ target_link_libraries(plasma_applet_train_schedule
 target_link_libraries(plasma_engine_train_schedule
                       ${KDE4_PLASMA_LIBS} ${KDE4_KDECORE_LIBS} ${QT_QTNETWORK_LIBRARY})
 
-
 install(TARGETS plasma_applet_train_schedule
         DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -36,6 +35,8 @@ install(FILES train_schedule_plasmoid.desktop
 
 install(FILES train_schedule_engine.desktop
         DESTINATION ${SERVICES_INSTALL_DIR})
+
+install(FILES stations DESTINATION ${DATA_INSTALL_DIR}/train_schedule)
 
 kde4_install_icons(${ICON_INSTALL_DIR})
 
