@@ -19,7 +19,8 @@
  *
  **************************************************************************/
 
-
+#include <KConfig>
+#include <KConfigGroup>
 #include "station.h"
 
 QMap<QString,QString> Station::stationIdMap;
@@ -44,12 +45,8 @@ QString Station::stationName(QString id) {
 }
 
 void Station::populate() {
-	stationIdMap["Lyon Part-Dieu"] = QString("OCE87723197");
-	stationIdMap["Lyon Perrache"] = "OCE87722025";
-	stationIdMap["Macon"] = "OCE87725689";
-	stationIdMap["Amberieu"] = "OCE87743716";
-	stationIdMap["Villefranche"] = "OCE87721332";
-	stationIdMap["St Etienne"] = "OCE87726000";
+	KConfig stationFile(QString("train_schedule/stations"), KConfig::FullConfig, "data");
+	stationIdMap = stationFile.group("stations").entryMap();
 }
 
 const QMap<QString, QString> & Station::map() {

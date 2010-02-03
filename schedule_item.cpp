@@ -120,9 +120,9 @@ void ScheduleItem::setSchedule(Schedule & sched)
 
 void ScheduleItem::resizeEvent(QGraphicsSceneResizeEvent * event)
 {
-	int h = m_stations->nativeWidget()->heightForWidth(event->newSize().width());
-
+	int h;
+	h = m_stations->nativeWidget()->heightForWidth(event->newSize().width());
 	m_stations->setMinimumHeight(h);
 	m_stations->setPreferredHeight(h);
-}
 
+}
