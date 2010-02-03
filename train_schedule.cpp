@@ -164,7 +164,7 @@ void PlasmaTrainSchedule::dataUpdated(const QString &name, const Plasma::DataEng
 				       item["stations"].toStringList(),
 				       item["start"].toTime(),
 				       item["delay"].toString(),
-				       item["comment"].toString().mid(2));
+				       item["comment"].toString());
 
 			ScheduleItem * schedItem = dynamic_cast<ScheduleItem *>(m_layout->itemAt(i));
 			schedItem->setSchedule(sched);

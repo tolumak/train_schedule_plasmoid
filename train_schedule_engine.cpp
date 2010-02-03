@@ -143,7 +143,7 @@ void TrainScheduleEngine::requestFinished(QNetworkReply * reply)
 	reply->deleteLater();
 }
 
-QVariant TrainScheduleEngine::parseLine(QString &line)
+QVariant  TrainScheduleEngine::parseLine(QString &line)
 {
 	QMap<QString,QVariant> data;
 	QTime start;
@@ -160,6 +160,11 @@ QVariant TrainScheduleEngine::parseLine(QString &line)
 	data["start"] = start;
 	data["destination"] = cut[3].trimmed();
 	data["delay"] = cut[5].trimmed();
+	// the data are a mix of Utf8 and Latin-1 characters
+	// so the following lines are ugly but... it works
+	if (cut[6][0] == 65533) {
+		cut[6].remove(0, 1);
+	}
 	data["comment"] = cut[6].trimmed();
 	return data;
 }
