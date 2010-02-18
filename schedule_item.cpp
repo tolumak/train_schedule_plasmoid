@@ -125,4 +125,5 @@ void ScheduleItem::resizeEvent(QGraphicsSceneResizeEvent * event)
 	m_stations->setMinimumHeight(h);
 	m_stations->setPreferredHeight(h);
 
+	adjustSize();
 }
