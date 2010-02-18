@@ -22,7 +22,7 @@ kde4_add_plugin(plasma_engine_train_schedule ${train_schedule_engine_SRCS})
 target_link_libraries(plasma_applet_train_schedule
                       ${KDE4_PLASMA_LIBS} ${KDE4_KDEUI_LIBS})
 target_link_libraries(plasma_engine_train_schedule
-                      ${KDE4_PLASMA_LIBS} ${KDE4_KDECORE_LIBS} ${QT_QTNETWORK_LIBRARY})
+                      ${KDE4_PLASMA_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS})
 
 install(TARGETS plasma_applet_train_schedule
         DESTINATION ${PLUGIN_INSTALL_DIR})

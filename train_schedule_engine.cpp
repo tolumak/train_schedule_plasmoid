@@ -19,10 +19,9 @@
  *
  **************************************************************************/
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <QDate>
 #include <QTime>
-#include <iostream>
 
 #include <Plasma/DataContainer>
 
@@ -43,18 +42,10 @@ TrainScheduleEngine::TrainScheduleEngine(QObject* parent, const QVariantList& ar
 	Q_UNUSED(args);
 
 	setMinimumPollingInterval(m_interval);
-
-	m_manager = new QNetworkAccessManager(this);
-
-	connect(m_manager, SIGNAL(finished(QNetworkReply*)),
-		this, SLOT(requestFinished(QNetworkReply*)));
-
 }
 
 TrainScheduleEngine::~TrainScheduleEngine()
 {
-	delete(m_manager);
-	m_manager = 0;
 }
 
 
@@ -103,11 +94,11 @@ void TrainScheduleEngine::setStart(int start)
 }
 
 
-QUrl TrainScheduleEngine::getUrl()
+KUrl TrainScheduleEngine::getUrl()
 {
 	QTime time = QTime::currentTime().addMSecs(m_start);
 
-	return QUrl(urlFormat.arg(m_station).arg(m_nb)
+	return KUrl(urlFormat.arg(m_station).arg(m_nb)
 		.arg(QDate::currentDate().toString("yyyy;MM;dd"))
 		    .arg(time.toString("HH;mm")));
 }
@@ -115,33 +106,48 @@ QUrl TrainScheduleEngine::getUrl()
 
 void TrainScheduleEngine::request()
 {
-	QNetworkReply * reply;
-
-	reply = m_manager->get(QNetworkRequest(getUrl()));
-
-	connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
-		this, SLOT(slotError(QNetworkReply::NetworkError)));
+	KIO::TransferJob *job;
+	job = KIO::get(getUrl(), KIO::Reload, KIO::HideProgressInfo);
+	connect(job, SIGNAL(result(KIO::Job *)),
+		this, SLOT(resultReceived(KIO::Job *)));
+	connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)),
+		this, SLOT(dataReceived(KIO::Job *, const QByteArray &)));
 }
 
-void TrainScheduleEngine::requestFinished(QNetworkReply * reply)
+void TrainScheduleEngine::resultReceived(KIO::Job *job)
 {
+	if (job->error()) {
+		kDebug() << job->errorString();
+	}
+}
+
+void TrainScheduleEngine::dataReceived(KIO::Job *job, const QByteArray &data)
+{
+	Q_UNUSED(job);
+
 	QString source = QString("schedule-%1-%2-%3").arg(m_station).arg(m_nb).arg(m_start);
 
-	QString rep = QString::fromUtf8(reply->readAll());
+	QString rep = QString::fromUtf8(data);
+
 	QStringList strings = rep.split(QRegExp("&ligne[0-9]="));
+
+	// Remove blabla...
 	if (!strings.isEmpty())
 		strings.removeFirst();
 
-	QVariantList * trainList = new QVariantList();
-	for (int i = 0 ; i < strings.count() ; i++) {
-		*trainList << parseLine(strings[i]);
+	// If there is something left in the list it deserves
+	// to be treated!
+	if (!strings.isEmpty()) {
+		QVariantList * trainList = new QVariantList();
+		for (int i = 0 ; i < strings.count() ; i++) {
+			*trainList << parseLine(strings[i]);
+		}
+
+		setData(source, "items", *trainList);
+		delete(trainList);
 	}
-
-	setData(source, "items", *trainList);
-	delete(trainList);
-
-	reply->deleteLater();
 }
+
 
 QVariant  TrainScheduleEngine::parseLine(QString &line)
 {
@@ -167,11 +173,6 @@ QVariant  TrainScheduleEngine::parseLine(QString &line)
 	}
 	data["comment"] = cut[6].trimmed();
 	return data;
-}
-
-void TrainScheduleEngine::slotError(QNetworkReply::NetworkError error)
-{
-	qDebug() << "Network error " << error;
 }
 
 K_EXPORT_PLASMA_DATAENGINE(train_schedule, TrainScheduleEngine)

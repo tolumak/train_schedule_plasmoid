@@ -22,7 +22,7 @@
 
 #include "train_schedule.h"
 
-#include <qdebug.h>
+#include <kdebug.h>
 #include <QPainter>
 #include <QFontMetrics>
 #include <QSizeF>
@@ -88,7 +88,7 @@ void PlasmaTrainSchedule::connectToEngine()
 
         Plasma::DataEngine* engine = dataEngine("train_schedule");
 	if (!engine) {
-		qDebug() << "Unable to connect to train_schedule engine";
+		kDebug() << "Unable to connect to train_schedule engine";
 		return;
 	}
 	foreach(QString s, engine->sources()) {

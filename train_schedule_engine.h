@@ -26,10 +26,9 @@
 #include <Plasma/DataEngine>
 
 #include <QList>
-#include <QNetworkReply>
-#include <QNetworkAccessManager>
-#include <QUrl>
-
+#include <KUrl>
+#include <KIO/TransferJob>
+#include <KIO/Scheduler>
 
 class TrainScheduleEngine : public Plasma::DataEngine
 {
@@ -56,18 +55,16 @@ protected:
 	bool updateSourceEvent(const QString& name);
 
 public slots:
-	void requestFinished(QNetworkReply * reply);
-	void slotError(QNetworkReply::NetworkError error);
+	void dataReceived(KIO::Job *job, const QByteArray &data);
+	void resultReceived(KIO::Job *job);
 
 private:
-	QUrl getUrl();
+	KUrl getUrl();
 	void request();
 	QVariant parseLine(QString &line);
 
 private:
 	const static QString urlFormat;
-
-	QNetworkAccessManager * m_manager;
 
 	int m_start;
 	QString m_station;
