@@ -56,7 +56,7 @@ protected:
 
 public slots:
 	void dataReceived(KIO::Job *job, const QByteArray &data);
-	void resultReceived(KIO::Job *job);
+	void resultReceived(KJob *job);
 
 private:
 	KUrl getUrl();

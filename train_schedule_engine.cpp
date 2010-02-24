@@ -108,13 +108,13 @@ void TrainScheduleEngine::request()
 {
 	KIO::TransferJob *job;
 	job = KIO::get(getUrl(), KIO::Reload, KIO::HideProgressInfo);
-	connect(job, SIGNAL(result(KIO::Job *)),
-		this, SLOT(resultReceived(KIO::Job *)));
+	connect(job, SIGNAL(result(KJob *)),
+		this, SLOT(resultReceived(KJob *)));
 	connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)),
 		this, SLOT(dataReceived(KIO::Job *, const QByteArray &)));
 }
 
-void TrainScheduleEngine::resultReceived(KIO::Job *job)
+void TrainScheduleEngine::resultReceived(KJob *job)
 {
 	if (job->error()) {
 		kDebug() << job->errorString();
