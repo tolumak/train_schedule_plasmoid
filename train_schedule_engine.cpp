@@ -155,23 +155,43 @@ QVariant  TrainScheduleEngine::parseLine(QString &line)
 	QTime start;
 	QStringList cut = line.split(";");
 
-	QStringList HourMinute = cut[2].split(":");
-	start.setHMS(HourMinute[0].toInt(), HourMinute[1].toInt(), 0);
+	if (cut.count() >= 5) {
+		QStringList HourMinute = cut[2].split(":");
+		start.setHMS(HourMinute[0].toInt(), HourMinute[1].toInt(), 0);
 
-	QStringList stations = cut[4].trimmed().split(QRegExp("\\s*,\\s*"));
+		QStringList stations = cut[4].trimmed().split(QRegExp("\\s*,\\s*"));
 
+		data["type"] = cut[0].trimmed();
+		data["stations"] = stations;
+		data["start"] = start;
+		data["destination"] = cut[3].trimmed();
 
-	data["type"] = cut[0].trimmed();
-	data["stations"] = stations;
-	data["start"] = start;
-	data["destination"] = cut[3].trimmed();
-	data["delay"] = cut[5].trimmed();
-	// the data are a mix of Utf8 and Latin-1 characters
-	// so the following lines are ugly but... it works
-	if (cut[6][0] == 65533) {
-		cut[6].remove(0, 1);
+		if (cut.count() >= 6) {
+			data["delay"] = cut[5].trimmed();
+		}
+		else {
+			data["delay"] = "";
+		}
+
+		if (cut.count() >= 7) {
+			// the data are a mix of Utf8 and Latin-1 characters
+			// so the following lines are ugly but... it works
+			if (cut[6][0] == 65533) {
+				cut[6].remove(0, 1);
+			}
+			data["comment"] = cut[6].trimmed();
+		} else {
+			data["comment"] = "";
+		}
 	}
-	data["comment"] = cut[6].trimmed();
+	else {
+		data["type"] = "Unknown";
+		data["start"] = start.setHMS(0,0,0);
+		data["destination"] = "Unknown";
+		data["stations"] = QStringList();
+		data["comment"] = "";
+		data["delay"] = "";
+	}
 	return data;
 }
 
