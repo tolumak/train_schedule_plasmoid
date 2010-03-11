@@ -61,11 +61,13 @@ QString Schedule::stationsStr()
 {
 	int i;
 	QString str = "";
-	for (i = 0 ; i < m_stations.length() - 1; i++) {
+	if (m_stations.length() > 0) {
+		for (i = 0 ; i < m_stations.length() - 1; i++) {
+			str += m_stations[i];
+			str += ", ";
+		}
 		str += m_stations[i];
-		str += ", ";
 	}
-	str += m_stations[i];
 
 	return str;
 }
