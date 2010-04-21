@@ -29,7 +29,7 @@
 #include "station.h"
 
 const QString TrainScheduleEngine::DEFAULT_STATION = Station::stationId("Lyon Part-Dieu");
-const QString TrainScheduleEngine::urlFormat = "http://aln.canaltp.fr/dev/index.php?gare=%1&nbredepart=%2&datedepart=%3&heuredep=%4&modedep=1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1&alea=1262617546333&numafficheur=0";
+const QString TrainScheduleEngine::urlFormat = "http://widget.canaltp.fr/Prochains_departs_15122009/dev/index.php?gare=%1&nbredepart=%2&datedepart=%3&heuredep=%4&modedep=1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1&alea=1262617546333&numafficheur=0";
 
 
 TrainScheduleEngine::TrainScheduleEngine(QObject* parent, const QVariantList& args)
